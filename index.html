@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+  <title>Gliahol — Презентація</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    html,body{height:100%}
+    body{
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      margin:0;background:#fff;color:#1f2937;
+      overflow:hidden; /* без прокрутки */
+    }
+
+    /* Слайды */
+    .slide{
+      position:absolute; inset:0; width:100vw; height:100vh;
+      display:none; background:#fff; overflow:hidden; /* важливо: ховаємо скрол */
+      place-items:center;
+    }
+    .slide.active{display:grid}
+
+    /* Центруюча «сцена» 1280×720, що масштабується під екран */
+    .fit-16x9{width:100%;height:100%;display:grid;place-items:center}
+    .fit-stage{
+      width:1280px; height:720px; transform:scale(var(--fitScale,1));
+      transform-origin:center; position:relative;
+      display:flex; flex-direction:column;
+    }
+
+    /* Внутрішня колонка слайда: заголовок + контент = auto / 1fr
+       Це прибирає зайві пустоти знизу */
+    .scol{display:grid; grid-template-rows:auto 1fr; gap:16px; height:100%}
+
+    /* Рівні картки та центрування контенту */
+    .eq-grid{align-items:stretch}                   /* grid-контейнер тягне дітей на однакову висоту */
+    .eq-card{height:100%; display:flex; flex-direction:column; justify-content:center; text-align:center}
+
+    /* UI-карти та елементи */
+    .clinical-card{border:1px solid #e5e7eb;border-radius:12px;background:#fff;box-shadow:0 4px 10px rgba(0,0,0,.06);transition:transform .25s ease,box-shadow .25s ease}
+    .clinical-card:hover{transform:translateY(-3px);box-shadow:0 14px 28px rgba(0,0,0,.12)}
+    .stat-card{background:#fff;border-radius:16px;padding:18px;text-align:center;border:1px solid #eef2f7;box-shadow:0 10px 24px rgba(2,6,23,.06)}
+    .stat-number{font-size:2.2rem;font-weight:800;margin-bottom:.2rem;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .progress-bar{width:100%;height:14px;background:#e5e7eb;border-radius:12px;overflow:hidden}
+    .progress-fill{height:100%;width:0;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;color:#fff;font-weight:700;font-size:.72rem;border-radius:12px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);transition:width 1.6s ease-in-out}
+    .molecular-formula{font-family:"Courier New",monospace;font-size:.9rem;background:#111827;color:#10b981;padding:8px 10px;border-radius:10px;border-left:4px solid #10b981;display:inline-block}
+
+    /* Хедер-сканлайн */
+    .hologram-effect{position:relative;isolation:isolate}
+    .hologram-effect::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(0,255,255,.12) 50%,transparent);animation:scanLine 3s linear infinite;pointer-events:none}
+    @keyframes scanLine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+    /* Точки-індикатори */
+    .indicator{width:12px;height:12px;border-radius:9999px;background:rgba(0,0,0,.08);border:1px solid rgba(0,0,0,.12);cursor:pointer;transition:all .2s}
+    .indicator.active{background:#111827;transform:scale(1.12);box-shadow:0 4px 10px rgba(0,0,0,.25)}
+  </style>
+</head>
+<body>
+
+ <!-- СЛАЙД 1: ЛОГО ПО ЦЕНТРУ -->
+  <section class="slide active" id="slide-1">
+    <div class="fit-16x9">
+      <div class="fit-stage justify-center items-center">
+        <img src="assets/FJGTxmY7nYxO2gRhDrP1X.png" alt="Boiko Clinic Logo" class="max-h-[60%] object-contain drop-shadow-xl"/>
+      </div>
+    </div>
+  </section>
+
+  <!-- СЛАЙД 2 -->
+  <section class="slide" id="slide-2">
+    <div class="fit-16x9">
+      <div class="fit-stage">
+        <div class="scol p-8">
+          <div class="grid grid-cols-2 gap-8 eq-grid items-center">
+            <div class="w-full h-full grid place-items-center">
+              <img src="assets/wuKM9Y6TQskEe1Rj7YTWN.png" alt="Gliahol Product" class="max-h-[85%] object-contain drop-shadow-2xl"/>
+            </div>
+            <div class="eq-card">
+              <h1 class="text-[52px] leading-[1.05] font-extrabold bg-gradient-to-r from-blue-600 via-purple-600 to-emerald-600 bg-clip-text text-transparent mb-4 hologram-effect">Gliahol®</h1>
+              <p class="text-[26px] text-gray-700 font-medium">🧠 Сучасна комбінація холіну альфосцерату з вітаміном B12</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- СЛАЙД 3 -->
+  <section class="slide" id="slide-3">
+    <div class="fit-16x9">
+      <div class="fit-stage">
+        <div class="scol p-6">
+          <h2 class="text-[36px] font-extrabold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Склад препарату</h2>
+          <div class="grid grid-rows-[auto,1fr] gap-4 h-full">
+            <div class="grid grid-cols-4 gap-4 eq-grid">
+              <div class="stat-card eq-card"><div class="text-2xl mb-1">🧬</div><div class="stat-number">380</div><div class="text-sm font-semibold text-blue-600">мг холіну альфосцерату</div></div>
+              <div class="stat-card eq-card"><div class="text-2xl mb-1">💊</div><div class="stat-number">3</div><div class="text-sm font-semibold text-purple-600">мкг вітаміну B12</div></div>
+              <div class="stat-card eq-card"><div class="text-2xl mb-1">📈</div><div class="stat-number">88</div><div class="text-sm font-semibold text-green-600">% біодоступність холіну</div></div>
+              <div class="stat-card eq-card"><div class="text-2xl mb-1">⚡</div><div class="stat-number">95</div><div class="text-sm font-semibold text-red-600">% біодоступність B12</div></div>
+            </div>
+            <div class="grid grid-cols-2 gap-6 eq-grid">
+              <div class="clinical-card bg-blue-50 p-6 eq-card">
+                <div class="text-3xl mb-2">🧬</div>
+                <h3 class="text-xl font-bold text-blue-600 mb-2">Холіну альфосцерат</h3>
+                <div class="mb-2"><span class="molecular-formula">C₈H₂₀NO₆P</span></div>
+                <p class="text-sm text-gray-700 mb-3">Попередник ацетилхоліну та фосфоліпіду мембран нейронів</p>
+                <div class="progress-bar"><div class="progress-fill bioavailability-choline" data-target="88%">88%</div></div>
+                <p class="text-xs text-gray-500 mt-1">Біодоступність</p>
+              </div>
+              <div class="clinical-card bg-purple-50 p-6 eq-card">
+                <div class="text-3xl mb-2">💊</div>
+                <h3 class="text-xl font-bold text-purple-600 mb-2">Ціанокобаламін (B12)</h3>
+                <div class="mb-2"><span class="molecular-formula">C₆₃H₈₈CoN₁₄O₁₄P</span></div>
+                <p class="text-sm text-gray-700 mb-3">Захищає та відновлює нервові волокна</p>
+                <div class="progress-bar"><div class="progress-fill bioavailability-b12" data-target="95%">95%</div></div>
+                <p class="text-xs text-gray-500 mt-1">Біодоступність</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- СЛАЙД 4 -->
+  <section class="slide" id="slide-4">
+    <div class="fit-16x9">
+      <div class="fit-stage">
+        <div class="scol p-6">
+          <h2 class="text-[36px] font-extrabold text-center bg-gradient-to-r from-purple-600 to-green-600 bg-clip-text text-transparent">Механізм дії</h2>
+          <div class="grid grid-cols-2 gap-6 eq-grid">
+            <div class="clinical-card p-6 eq-card">
+              <h3 class="text-xl font-bold text-blue-600 mb-2">🧬 Холіну альфосцерат</h3>
+              <p class="text-gray-700 leading-relaxed text-sm">Попередник нейромедіатора ацетилхоліну та фосфоліпіду мембран нейронів гліцерофосфату. Має виражений парасимпатоміметичний ефект, діє переважно на центральну нервову систему, сприяє відновленню мембран нейронів.</p>
+            </div>
+            <div class="clinical-card p-6 eq-card">
+              <h3 class="text-xl font-bold text-purple-600 mb-2">💊 Вітамін B12 (ціанокобаламін)</h3>
+              <p class="text-gray-700 leading-relaxed text-sm">Відіграє ключову роль у біотрансформації холіну альфосцерату в центральній нервовій системі, захищає та відновлює нервові волокна, підтримує передачу нервових імпульсів.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- СЛАЙД 5 -->
+  <section class="slide" id="slide-5">
+    <div class="fit-16x9">
+      <div class="fit-stage">
+        <div class="scol p-6">
+          <h2 class="text-[32px] font-extrabold text-center bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">Показання до застосування</h2>
+          <div class="grid grid-rows-[auto,1fr] gap-4 h-full">
+            <div class="grid grid-cols-6 gap-3 eq-grid">
+              <div class="clinical-card bg-blue-50 p-3 eq-card"><div class="text-xl">🧠</div><h4 class="font-semibold text-blue-800 text-xs mt-1">Цереброваскулярні</h4></div>
+              <div class="clinical-card bg-red-50 p-3 eq-card"><div class="text-xl">⚡</div><h4 class="font-semibold text-red-800 text-xs mt-1">Після ГПМК</h4></div>
+              <div class="clinical-card bg-purple-50 p-3 eq-card"><div class="text-xl">🎯</div><h4 class="font-semibold text-purple-800 text-xs mt-1">Когнітивні</h4></div>
+              <div class="clinical-card bg-green-50 p-3 eq-card"><div class="text-xl">👁️</div><h4 class="font-semibold text-green-800 text-xs mt-1">Сухе око</h4></div>
+              <div class="clinical-card bg-indigo-50 p-3 eq-card"><div class="text-xl">👁️‍🗨️</div><h4 class="font-semibold text-indigo-800 text-xs mt-1">Глаукома</h4></div>
+              <div class="clinical-card bg-pink-50 p-3 eq-card"><div class="text-xl">🩸</div><h4 class="font-semibold text-pink-800 text-xs mt-1">Ретинопатія</h4></div>
+            </div>
+            <div class="grid grid-cols-2 gap-6 eq-grid">
+              <div class="clinical-card p-5 eq-card">
+                <div class="w-full">
+                  <h3 class="text-base font-bold mb-3">Покращення когнітивних функцій</h3>
+                  <canvas id="cognitiveChart" width="520" height="280"></canvas>
+                </div>
+              </div>
+              <div class="clinical-card p-5 eq-card">
+                <div class="w-full">
+                  <h3 class="text-base font-bold mb-3">Задоволеність пацієнтів</h3>
+                  <div class="space-y-3 text-left">
+                    <div>
+                      <div class="flex justify-between mb-1"><span class="font-medium text-sm">Покращення концентрації</span><span class="font-bold text-blue-600 text-sm">89%</span></div>
+                      <div class="progress-bar"><div class="progress-fill satisfaction-concentration" data-target="89%">89%</div></div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between mb-1"><span class="font-medium text-sm">Нормалізація сну</span><span class="font-bold text-purple-600 text-sm">82%</span></div>
+                      <div class="progress-bar"><div class="progress-fill satisfaction-sleep" data-target="82%">82%</div></div>
+                    </div>
+                    <div>
+                      <div class="flex justify-between mb-1"><span class="font-medium text-sm">Покращення зору</span><span class="font-bold text-green-600 text-sm">76%</span></div>
+                      <div class="progress-bar"><div class="progress-fill satisfaction-vision" data-target="76%">76%</div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- СЛАЙД 6 -->
+  <section class="slide" id="slide-6">
+    <div class="fit-16x9">
+      <div class="fit-stage">
+        <div class="scol p-6">
+          <h2 class="text-[32px] font-extrabold text-center bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">Спосіб застосування</h2>
+          <div class="grid grid-cols-2 gap-8 eq-grid">
+            <div class="clinical-card p-8 eq-card">
+              <div class="text-5xl mb-2">💊</div>
+              <h3 class="text-2xl font-bold text-green-600 mb-1">Дозування</h3>
+              <p class="text-xl font-semibold text-gray-800 mb-1">1 капсула 3 рази на добу</p>
+              <p class="text-lg text-gray-600">Термін лікування 1–2 місяці</p>
+              <p class="text-sm text-gray-500 mt-2">Надалі курс визначається лікарем індивідуально</p>
+            </div>
+            <div class="clinical-card bg-red-50 p-8 eq-card">
+              <div class="text-5xl mb-2">⚠️</div>
+              <h3 class="text-2xl font-bold text-red-600 mb-1">Застереження</h3>
+              <ul class="text-left text-gray-700 space-y-2 mx-auto">
+                <li>• Індивідуальна непереносимість</li>
+                <li>• Особи до 18 років</li>
+                <li>• Вагітність та лактація</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- СЛАЙД 7 -->
+  <section class="slide" id="slide-7">
+    <div class="fit-16x9">
+      <div class="fit-stage">
+        <div class="scol p-6">
+          <h2 class="text-[32px] font-extrabold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Переваги для пацієнта</h2>
+          <div class="grid grid-rows-[auto,1fr] gap-4 h-full">
+            <div class="grid grid-cols-4 gap-4 eq-grid">
+              <div class="stat-card eq-card"><div class="text-2xl mb-1">📈</div><div class="stat-number">89</div><div class="text-sm font-semibold text-blue-600">% покращення концентрації</div></div>
+              <div class="stat-card eq-card"><div class="text-2xl mb-1">🌙</div><div class="stat-number">82</div><div class="text-sm font-semibold text-purple-600">% нормалізації сну</div></div>
+              <div class="stat-card eq-card"><div class="text-2xl mb-1">😊</div><div class="stat-number">76</div><div class="text-sm font-semibold text-green-600">% покращення настрою</div></div>
+              <div class="stat-card eq-card"><div class="text-2xl mb-1">👁️</div><div class="stat-number">71</div><div class="text-sm font-semibold text-red-600">% покращення зору</div></div>
+            </div>
+            <div class="grid grid-cols-2 gap-6 eq-grid">
+              <div class="clinical-card p-5 eq-card">
+                <div class="w-full">
+                  <h3 class="text-base font-bold mb-3">Якість життя пацієнтів</h3>
+                  <canvas id="qualityOfLifeChart" width="520" height="280"></canvas>
+                </div>
+              </div>
+              <div class="clinical-card p-5 eq-card">
+                <div class="w-full">
+                  <h3 class="text-base font-bold mb-3">Ключові переваги</h3>
+                  <div class="space-y-3 text-left">
+                    <div><div class="flex justify-between mb-1"><span class="font-medium text-sm">Продуктивність</span><span class="font-bold text-blue-600 text-sm">94%</span></div><div class="progress-bar"><div class="progress-fill patient-productivity" data-target="94%">94%</div></div></div>
+                    <div><div class="flex justify-between mb-1"><span class="font-medium text-sm">Адаптація до стресу</span><span class="font-bold text-purple-600 text-sm">87%</span></div><div class="progress-bar"><div class="progress-fill patient-stress" data-target="87%">87%</div></div></div>
+                    <div><div class="flex justify-between mb-1"><span class="font-medium text-sm">Переносимість</span><span class="font-bold text-green-600 text-sm">98%</span></div><div class="progress-bar"><div class="progress-fill patient-tolerance" data-target="98%">98%</div></div></div>
+                    <div><div class="flex justify-between mb-1"><span class="font-medium text-sm">Доступність</span><span class="font-bold text-orange-600 text-sm">92%</span></div><div class="progress-bar"><div class="progress-fill patient-accessibility" data-target="92%">92%</div></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- СЛАЙД 8 -->
+  <section class="slide" id="slide-8">
+    <div class="fit-16x9">
+      <div class="fit-stage">
+        <div class="scol p-6">
+          <h2 class="text-[32px] font-extrabold text-center bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">Зручність для лікаря</h2>
+          <div class="grid grid-rows-[auto,1fr] gap-4 h-full">
+            <div class="grid grid-cols-4 gap-4 eq-grid">
+              <div class="stat-card eq-card"><div class="text-2xl mb-1">🛡️</div><div class="stat-number">95</div><div class="text-sm font-semibold text-blue-600">% метаболічної захищеності</div></div>
+              <div class="stat-card eq-card"><div class="text-2xl mb-1">🎯</div><div class="stat-number">92</div><div class="text-sm font-semibold text-purple-600">% селективності впливу</div></div>
+              <div class="stat-card eq-card"><div class="text-2xl mb-1">⏰</div><div class="stat-number">8</div><div class="text-sm font-semibold text-green-600">годин довготривалої дії</div></div>
+              <div class="stat-card eq-card"><div class="text-2xl mb-1">👍</div><div class="stat-number">96</div><div class="text-sm font-semibold text-red-600">% позитивного feedback</div></div>
+            </div>
+            <div class="grid grid-cols-2 gap-6 eq-grid">
+              <div class="clinical-card p-5 eq-card">
+                <div class="w-full">
+                  <h3 class="text-base font-bold mb-3">Клінічна ефективність</h3>
+                  <canvas id="clinicalEffectivenessChart" width="520" height="280"></canvas>
+                </div>
+              </div>
+              <div class="clinical-card p-5 eq-card">
+                <div class="w-full">
+                  <h3 class="text-base font-bold mb-3">Професійні переваги</h3>
+                  <div class="space-y-3 text-left">
+                    <div><div class="flex justify-between mb-1"><span class="font-medium text-sm">Візуальний ефект</span><span class="font-bold text-blue-600 text-sm">91%</span></div><div class="progress-bar"><div class="progress-fill doctor-visual-effect" data-target="91%">91%</div></div></div>
+                    <div><div class="flex justify-between mb-1"><span class="font-medium text-sm">Індивідуальне дозування</span><span class="font-bold text-purple-600 text-sm">88%</span></div><div class="progress-bar"><div class="progress-fill doctor-dosing" data-target="88%">88%</div></div></div>
+                    <div><div class="flex justify-between mb-1"><span class="font-medium text-sm">Перехід на пероральну форму</span><span class="font-bold text-green-600 text-sm">93%</span></div><div class="progress-bar"><div class="progress-fill doctor-oral-transition" data-target="93%">93%</div></div></div>
+                    <div><div class="flex justify-between mb-1"><span class="font-medium text-sm">Комплаєнс пацієнтів</span><span class="font-bold text-orange-600 text-sm">94%</span></div><div class="progress-bar"><div class="progress-fill doctor-compliance" data-target="94%">94%</div></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- НАВІГАЦІЯ (fixed, враховується при масштабуванні) -->
+  <div class="fixed left-4 top-1/2 -translate-y-1/2 z-50 hidden md:block">
+    <button onclick="prevSlide()" class="bg-white text-gray-700 p-3 rounded-full border border-gray-300 font-medium shadow-lg hover:bg-gray-50 transition hover:scale-110">
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+    </button>
+  </div>
+  <div class="fixed right-4 top-1/2 -translate-y-1/2 z-50 hidden md:block">
+    <button onclick="nextSlide()" class="bg-blue-600 text-white p-3 rounded-full hover:bg-blue-700 transition font-medium shadow-lg hover:scale-110">
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+    </button>
+  </div>
+  <div class="fixed top-4 right-4 z-50 hidden md:block">
+    <span id="slide-counter" class="bg-gray-900 text-white px-4 py-2 rounded-lg font-medium shadow-lg">1 / 8</span>
+  </div>
+  <div id="desktop-dots" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 hidden md:flex gap-2"></div>
+
+  <!-- Mobile панель -->
+  <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-xl z-50 md:hidden">
+    <div class="flex items-center justify-between px-4 py-3">
+      <button onclick="prevSlide()" class="bg-gray-100 text-gray-700 p-3 rounded-full border border-gray-300 shadow-md active:scale-95 transition-transform">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+      </button>
+      <div id="mobile-dots" class="flex gap-2"></div>
+      <button onclick="nextSlide()" class="bg-blue-600 text-white p-3 rounded-full shadow-md active:scale-95 transition-transform">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="fixed top-4 left-1/2 -translate-x-1/2 z-50 md:hidden">
+    <span id="slide-counter-mobile" class="bg-gray-900 text-white px-3 py-1 rounded-lg text-sm font-medium shadow-lg">1 / 8</span>
+  </div>
+
+  <script>
+    /* === Масштабування всіх сцен 1280×720 під вікно (без прокрутки) === */
+    (function fitAllStages(){
+      const stages = () => Array.from(document.querySelectorAll('.fit-stage'));
+      function safeInsets(){
+        const fixedEls = Array.from(document.querySelectorAll('.fixed,[data-fixed]'));
+        let top=8,bottom=8,left=8,right=8;
+        fixedEls.forEach(el=>{
+          const r = el.getBoundingClientRect();
+          if(!r.width || !r.height) return;
+          if(r.top<=0 && r.bottom>0) top = Math.max(top, Math.ceil(r.bottom)+8);
+          if(r.bottom>=innerHeight && r.top<innerHeight) bottom = Math.max(bottom, Math.ceil(innerHeight - r.top)+8);
+          if(r.left<=0 && r.right>0) left = Math.max(left, Math.ceil(r.right)+8);
+          if(r.right>=innerWidth && r.left<innerWidth) right = Math.max(right, Math.ceil(innerWidth - r.left)+8);
+        });
+        return {top,bottom,left,right};
+      }
+      function fit(){
+        const {top,bottom,left,right} = safeInsets();
+        const w = Math.max(320, innerWidth - left - right);
+        const h = Math.max(240, innerHeight - top - bottom);
+        const s = Math.min(w/1280, h/720, 1);
+        stages().forEach(stage=>stage.style.setProperty('--fitScale', s));
+      }
+      addEventListener('resize', fit, {passive:true});
+      addEventListener('orientationchange', fit);
+      document.addEventListener('DOMContentLoaded', fit);
+      requestAnimationFrame(fit);
+    })();
+
+    /* === Навігація по слайдам (по колу) === */
+    let slides=[], totalSlides=0, currentSlide=1;
+    let _cognitiveChart=null,_qualityChart=null,_clinicalChart=null;
+
+    function collectSlides(){ slides = Array.from(document.querySelectorAll('.slide')); totalSlides = slides.length; }
+    function setActiveSlide(el){ slides.forEach(s=>{s.classList.remove('active'); s.style.display='none';}); el.style.display='grid'; el.classList.add('active'); }
+    function showSlide(n){
+      if(!slides.length) collectSlides();
+      // КРУГОВОЙ переход
+      if(n<1) n = totalSlides;
+      if(n>totalSlides) n = 1;
+      currentSlide = n; const el = slides[n-1]; if(!el) return;
+      setActiveSlide(el); updateCounters(); updateIndicators(); triggerSlideAnimations(n);
+    }
+    function nextSlide(){ showSlide(currentSlide+1); }
+    function prevSlide(){ showSlide(currentSlide-1); }
+    function goToSlide(n){ showSlide(n); }
+
+    document.addEventListener('keydown',e=>{
+      if(e.key==='ArrowRight'||e.key===' ') nextSlide();
+      else if(e.key==='ArrowLeft') prevSlide();
+    });
+    let sx=0,sy=0;
+    document.addEventListener('touchstart',e=>{sx=e.changedTouches[0].screenX; sy=e.changedTouches[0].screenY;},{passive:true});
+    document.addEventListener('touchend',e=>{
+      const dx=e.changedTouches[0].screenX-sx, dy=e.changedTouches[0].screenY-sy;
+      if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>50){ dx>0?prevSlide():nextSlide(); }
+    },{passive:true});
+
+    /* Індикатори і лічильники */
+    function buildDots(){
+      const desktop=document.getElementById('desktop-dots'), mobile=document.getElementById('mobile-dots');
+      desktop.innerHTML=''; mobile.innerHTML='';
+      for(let i=1;i<=totalSlides;i++){
+        const d1=document.createElement('div'); d1.className='indicator'; d1.onclick=()=>goToSlide(i); desktop.appendChild(d1);
+        const d2=document.createElement('div'); d2.className='indicator'; d2.style.width='8px'; d2.style.height='8px'; d2.onclick=()=>goToSlide(i); mobile.appendChild(d2);
+      }
+      updateIndicators();
+    }
+    function updateIndicators(){
+      const idx=currentSlide-1;
+      document.querySelectorAll('#desktop-dots .indicator').forEach((d,i)=>d.classList.toggle('active',i===idx));
+      document.querySelectorAll('#mobile-dots .indicator').forEach((d,i)=>d.classList.toggle('active',i===idx));
+    }
+    function updateCounters(){
+      const t=`${currentSlide} / ${totalSlides}`;
+      const c1=document.getElementById('slide-counter'); const c2=document.getElementById('slide-counter-mobile');
+      if(c1) c1.textContent=t; if(c2) c2.textContent=t;
+    }
+
+    /* Прогрес-бари — надійний старт після відображення */
+    function animateBars(scope){
+      const bars = scope.querySelectorAll('.progress-fill');
+      bars.forEach(el=>{
+        const target = el.dataset.target || el.textContent.trim();
+        el.style.transition='none'; el.style.width='0%';
+        void el.offsetWidth;
+        requestAnimationFrame(()=>{ requestAnimationFrame(()=>{
+          el.style.transition='width 1.6s ease-in-out';
+          el.style.width = target;
+        });});
+      });
+    }
+
+    /* Графіки (нереспонсивні, щоб стабільно масштабувалися разом із сценою) */
+    function makeCognitiveChart(){
+      const el=document.getElementById('cognitiveChart'); if(!el) return;
+      if(_cognitiveChart){_cognitiveChart.destroy();_cognitiveChart=null;}
+      _cognitiveChart=new Chart(el.getContext('2d'),{
+        type:'line',
+        data:{labels:['Початок','1 тиждень','2 тижні','1 місяць','2 місяці'],
+          datasets:[{label:'Когнітивний індекс',data:[45,52,61,73,85],borderColor:'#667eea',
+          backgroundColor:'rgba(102,126,234,.12)',borderWidth:3,fill:true,tension:.35,
+          pointBackgroundColor:'#667eea',pointBorderColor:'#fff',pointBorderWidth:2,pointRadius:3}]},
+        options:{responsive:false,plugins:{legend:{display:false}},
+          scales:{y:{beginAtZero:true,max:100,ticks:{callback:v=>v+'%'}},x:{}}}
+      });
+    }
+    function makeQualityChart(){
+      const el=document.getElementById('qualityOfLifeChart'); if(!el) return;
+      if(_qualityChart){_qualityChart.destroy();_qualityChart=null;}
+      _qualityChart=new Chart(el.getContext('2d'),{
+        type:'radar',
+        data:{labels:['Концентрація','Сон','Настрій','Енергія','Продуктивність','Стрес'],
+          datasets:[
+            {label:'До лікування',data:[45,40,50,35,40,30],borderColor:'#ef4444',backgroundColor:'rgba(239,68,68,.12)',borderWidth:2},
+            {label:'Після лікування',data:[89,82,76,85,88,80],borderColor:'#10b981',backgroundColor:'rgba(16,185,129,.12)',borderWidth:2}
+          ]},
+        options:{responsive:false,plugins:{legend:{position:'bottom'}},scales:{r:{beginAtZero:true,max:100,ticks:{stepSize:20}}}}
+      });
+    }
+    function makeClinicalChart(){
+      const el=document.getElementById('clinicalEffectivenessChart'); if(!el) return;
+      if(_clinicalChart){_clinicalChart.destroy();_clinicalChart=null;}
+      _clinicalChart=new Chart(el.getContext('2d'),{
+        type:'doughnut',
+        data:{labels:['Ефективно','Помірно','Неефективно'],
+          datasets:[{data:[88,9,3],backgroundColor:['#10b981','#f59e0b','#ef4444'],borderWidth:2,borderColor:'#fff'}]},
+        options:{responsive:false,plugins:{legend:{position:'bottom'}}}
+      });
+    }
+
+    /* Тригер анімацій при показі слайдів */
+    function triggerSlideAnimations(n){
+      const scope = slides[n-1]; if(!scope) return;
+      if(n===3){ animateBars(scope); }
+      if(n===5){ makeCognitiveChart(); animateBars(scope); }
+      if(n===7){ makeQualityChart(); animateBars(scope); }
+      if(n===8){ makeClinicalChart(); animateBars(scope); }
+    }
+
+    /* Старт */
+    document.addEventListener('DOMContentLoaded',()=>{
+      collectSlides(); buildDots(); showSlide(1);
+    });
+  </script>
+</body>
+</html>
